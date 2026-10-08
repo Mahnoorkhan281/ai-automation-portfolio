@@ -6,10 +6,10 @@ This automation collects customer inquiries through an online form and automatic
 
 ## Workflow
 
-Form submission
-↓
-n8n
-↓
+Form submission  
+↓  
+n8n  
+↓  
 Google Sheets
 
 ## Information collected
@@ -21,7 +21,6 @@ Google Sheets
 ## Tools used
 
 - n8n
-- Google Forms
 - Google Sheets
 
 ## Result
@@ -32,12 +31,12 @@ When a user submits the form, their information is automatically added as a new 
 
 ### n8n Workflow
 
-![n8n Workflow](workflow.png)
+![n8n Workflow](IMG-20261008-WA0007.jpg)
 
 ### Form
 
-![Form](form.png)
+![Form](IMG-20261008-WA0008.jpg)
 
 ### Google Sheets Result
 
-![Google Sheets Result](sheets.png)
+![Google Sheets Result](IMG-20261008-WA0009.jpg)
