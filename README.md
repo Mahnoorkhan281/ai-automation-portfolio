@@ -16,5 +16,9 @@ Automatically collects customer inquiries through a form and saves them to Googl
 [View Project](./projects/form-to-google-sheets)
 
 ---
+### 2. Automatic Email Confirmation
+An n8n workflow that sends a confirmation email through Gmail after a user submits a form.
+
+[View Project](./projects/automatic-email-confirmation)
 
 More projects coming soon.
