@@ -25,20 +25,16 @@ This project uses n8n to automatically send a confirmation email when a user sub
 ## Screenshots
 
 ### 1. Workflow
-
-Screenshot 2026-10-09 185949.png
+![n8n workflow](./Screenshot%202026-10-09%20185949.png)
 
 ### 2. Form
-
-Screenshot 2026-10-09 190003.png
+![Form](./Screenshot%202026-10-09%20190003.png)
 
 ### 3. Confirmation Email
-
-Screenshot 2026-10-09 190022.png
+![Confirmation email](./Screenshot%202026-10-09%20190022.png)
 
 ### 4. Workflow Test
-
-Screenshot 2026-10-09 190036.png
+![Workflow test](./Screenshot%202026-10-09%20190036.png)
 
 ## Result
 
