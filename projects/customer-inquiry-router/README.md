@@ -25,19 +25,19 @@ The exported n8n workflow JSON is included in this folder.
 
 ## Screenshots
 
-### Complete Workflow
+### Complete Workflow + IF Condition and Branches 
 ![Customer Inquiry Router Workflow](./Screenshot%202026-10-10%20170913.png)
 
-### IF Condition and Branches
+### Complaint Branch
 ![IF condition and branches](./Screenshot%202026-10-10%20171141.png)
 
-### Complaint Branch
+### Complaint Branch Test
 ![Complaint branch](./Screenshot%202026-10-10%20171217.png)
 
 ### General Inquiry Branch
 ![General inquiry branch](./Screenshot%202026-10-10%20171315.png)
 
-### Workflow Test
+### General Inquiry Branch Test
 ![Workflow test](./Screenshot%202026-10-10%20171717.png)
 
 ## Author
