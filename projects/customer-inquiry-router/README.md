@@ -24,7 +24,8 @@ An n8n workflow that checks the type of customer inquiry and sends a different e
 The exported n8n workflow JSON is included in this folder.
 
 ## Screenshots
-Screenshots will be added here.
 
+### Complete Workflow
+![Customer Inquiry Router Workflow](./customer-inquiry-router-workflow.png)
 ## Author
 Mahnoor — BS Artificial Intelligence Student
