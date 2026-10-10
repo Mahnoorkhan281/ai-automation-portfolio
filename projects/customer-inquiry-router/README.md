@@ -26,6 +26,19 @@ The exported n8n workflow JSON is included in this folder.
 ## Screenshots
 
 ### Complete Workflow
-![Customer Inquiry Router Workflow](./customer-inquiry-router-workflow.png)
+![Customer Inquiry Router Workflow](./Screenshot%202026-10-10%20170913.png)
+
+### IF Condition and Branches
+![IF condition and branches](./Screenshot%202026-10-10%20171141.png)
+
+### Complaint Branch
+![Complaint branch](./Screenshot%202026-10-10%20171217.png)
+
+### General Inquiry Branch
+![General inquiry branch](./Screenshot%202026-10-10%20171315.png)
+
+### Workflow Test
+![Workflow test](./Screenshot%202026-10-10%20171717.png)
+
 ## Author
 Mahnoor — BS Artificial Intelligence Student
