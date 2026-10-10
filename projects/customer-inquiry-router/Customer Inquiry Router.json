@@ -1,0 +1,231 @@
+{
+  "name": "Customer Inquiry Router",
+  "nodes": [
+    {
+      "parameters": {
+        "formTitle": "Customer Inquiry Form",
+        "formDescription": "Submit your inquiry below.\n",
+        "formFields": {
+          "values": [
+            {
+              "fieldLabel": "Customer name"
+            },
+            {
+              "fieldLabel": "Inquiry type"
+            },
+            {
+              "fieldLabel": "Email"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.formTrigger",
+      "typeVersion": 2.6,
+      "position": [
+        0,
+        0
+      ],
+      "id": "ab70ec64-122f-434d-a5f9-24cba522ab27",
+      "name": "On form submission",
+      "webhookId": "73fa4988-7f4f-4bef-8793-4de696078107"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "ba9faab0-19cf-40a6-b884-9997afcb9011",
+              "leftValue": "={{ $json[\"Inquiry type\"] }}",
+              "rightValue": "complaint",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        224,
+        0
+      ],
+      "id": "999d4318-abb8-4215-93c3-40672f86ff19",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "03ba7c67-4d51-4540-8b76-cbc0b3e9e992",
+              "name": "Result",
+              "value": "Complaint received-we will prioritize your inquiry.",
+              "type": "string"
+            }
+          ]
+        },
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.5,
+      "position": [
+        496,
+        -80
+      ],
+      "id": "425143f9-e429-4d6b-8d46-db6233fc8916",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "b0bd730b-f3f6-4190-9588-bba224301ce7",
+              "name": "Result",
+              "value": "Thank you for your inquiry. Our team will respond soon.",
+              "type": "string"
+            }
+          ]
+        },
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.5,
+      "position": [
+        496,
+        112
+      ],
+      "id": "db5f8ebc-b0ac-49b0-8112-be44bf04b869",
+      "name": "Edit Fields1"
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ $json.Email }}",
+        "subject": "We recieved your complaint.",
+        "emailType": "text",
+        "message": "={{ $json.Result }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        816,
+        -80
+      ],
+      "id": "d3f7326b-1d36-4b79-942d-8c06cacd2eac",
+      "name": "Send a message",
+      "webhookId": "5bd995e9-48e5-4ebf-8f2a-c021bcbe96f8",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "wsq9fyGGOaXQmNFx",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ $json.Email }}",
+        "subject": "We received your inquiry.",
+        "emailType": "text",
+        "message": "={{ $json.Result }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        816,
+        112
+      ],
+      "id": "60e08ffc-4d0b-4570-b9a0-2e9b0918937f",
+      "name": "Send a message1",
+      "webhookId": "a40076e6-6089-4509-b712-4467f28ab6d6",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "wsq9fyGGOaXQmNFx",
+          "name": "Gmail account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "On form submission": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Edit Fields1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "Send a message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields1": {
+      "main": [
+        [
+          {
+            "node": "Send a message1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "1d67693a-c494-4bbf-9159-c971dab603c0",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "2299ad7e2ddc455f35e9de3b09fac7626a218b7f533b673ee370932c94ed7490"
+  },
+  "nodeGroups": [],
+  "id": "Zv2wpWAKUHuVPaFk",
+  "tags": []
+}
