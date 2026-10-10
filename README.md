@@ -21,4 +21,9 @@ An n8n workflow that sends a confirmation email through Gmail after a user submi
 
 [View Project](./projects/automatic-email-confirmation)
 
+### 3. Customer Inquiry Router
+Automatically routes customer inquiries based on inquiry type and prepares different email responses for complaints and general inquiries.
+
+[View Project](./projects/customer-inquiry-router/)
+
 More projects coming soon.
