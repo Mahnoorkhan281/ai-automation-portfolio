@@ -26,4 +26,36 @@ Automatically routes customer inquiries based on inquiry type and prepares diffe
 
 [View Project](./projects/customer-inquiry-router/)
 
+## Inventory Management Automation System
+
+An inventory automation project built with **n8n, Google Sheets, and JavaScript** to streamline order processing and stock monitoring.
+
+### Workflows
+
+**1. Order Processing & Inventory Management**
+- Receives customer orders through a form.
+- Validates orders against available stock.
+- Records accepted and rejected orders.
+- Updates inventory after accepted orders.
+- Sends automated customer emails.
+
+**2. Low Stock Alert Automation**
+- Checks inventory every hour.
+- Identifies products at or below their minimum stock level.
+- Records new low-stock alerts in Google Sheets.
+- Sends email notifications for new alerts.
+- Prevents duplicate alerts for unresolved issues.
+
+### Technologies
+- n8n
+- Google Sheets
+- JavaScript
+- Email automation
+
+### Project Files and Screenshots
+
+[**View the complete project, workflow exports, and screenshots →**](projects/inventory-management-system/README.md)
+
+This project demonstrates workflow automation, conditional logic, data processing, inventory management, and automated notifications.
+
 More projects coming soon.
