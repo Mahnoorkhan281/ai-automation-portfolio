@@ -1,0 +1,298 @@
+{
+  "name": "Low Stock Alert Automation",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "hours"
+            }
+          ]
+        }
+      },
+      "id": "45d75496-cc77-4f64-986d-2e77bf5aa066",
+      "name": "Schedule Trigger",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.4,
+      "position": [
+        0,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "14Y0rg1fcNDqCtqS0LAdBMBjfeKW8aCmyNe4sT0TJ6FI",
+          "mode": "list",
+          "cachedResultName": "Orders processing database",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/14Y0rg1fcNDqCtqS0LAdBMBjfeKW8aCmyNe4sT0TJ6FI/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Inventory",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/14Y0rg1fcNDqCtqS0LAdBMBjfeKW8aCmyNe4sT0TJ6FI/edit#gid=0"
+        },
+        "options": {}
+      },
+      "id": "69fa0182-a81d-4897-a3c3-8a2a77cc818d",
+      "name": "Get row(s) in sheet",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        176,
+        0
+      ],
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "X3P7IEoPGgK8zyN4",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "14Y0rg1fcNDqCtqS0LAdBMBjfeKW8aCmyNe4sT0TJ6FI",
+          "mode": "list",
+          "cachedResultName": "Orders processing database",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/14Y0rg1fcNDqCtqS0LAdBMBjfeKW8aCmyNe4sT0TJ6FI/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 817934155,
+          "mode": "list",
+          "cachedResultName": "Stocks Alerts",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/14Y0rg1fcNDqCtqS0LAdBMBjfeKW8aCmyNe4sT0TJ6FI/edit#gid=817934155"
+        },
+        "options": {}
+      },
+      "id": "50bb8b93-7384-4c15-825b-4cbee29b18b4",
+      "name": "Get row(s) in sheet1",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        384,
+        0
+      ],
+      "executeOnce": true,
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "X3P7IEoPGgK8zyN4",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const inventory = $('Get row(s) in sheet').all()\n  .map(item => item.json);\n\nconst alerts = $input.all().map(item => item.json);\n\nconst lowStockProducts = inventory.filter(product => {\n  const stock = Number(product.stock_quantity);\n  const minimum = Number(product.minimum_stock);\n\n  return (\n    product.product_id &&\n    Number.isFinite(stock) &&\n    Number.isFinite(minimum) &&\n    stock <= minimum\n  );\n});\n\nconst newAlerts = lowStockProducts.filter(product => {\n  return !alerts.some(alert =>\n    String(alert.product_id).trim() ===\n      String(product.product_id).trim() &&\n    alert.alert_status === 'Low Stock' &&\n    String(alert.resolved).trim().toLowerCase() !== 'yes'\n  );\n});\n\nreturn newAlerts.map(product => ({\n  json: {\n    product_id: product.product_id,\n    product_name: product.product_name,\n    remaining_stock: Number(product.stock_quantity),\n    minimum_stock: Number(product.minimum_stock),\n    alert_status: 'Low Stock',\n    resolved: 'No'\n  }\n}));"
+      },
+      "id": "f52deef2-ccad-4672-9b70-32fc25efe71d",
+      "name": "Code in JavaScript",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        544,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "14Y0rg1fcNDqCtqS0LAdBMBjfeKW8aCmyNe4sT0TJ6FI",
+          "mode": "list",
+          "cachedResultName": "Orders processing database",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/14Y0rg1fcNDqCtqS0LAdBMBjfeKW8aCmyNe4sT0TJ6FI/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 817934155,
+          "mode": "list",
+          "cachedResultName": "Stocks Alerts",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/14Y0rg1fcNDqCtqS0LAdBMBjfeKW8aCmyNe4sT0TJ6FI/edit#gid=817934155"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "product_id": "={{ $json.product_id }}",
+            "product_name": "={{ $json.product_name }}",
+            "remaining_stock": "={{ $json.remaining_stock }}",
+            "alert_status": "={{ $json.alert_status }}",
+            "minimum_stock": "={{ $json.minimum_stock }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "product_id",
+              "displayName": "product_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "product_name",
+              "displayName": "product_name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "remaining_stock",
+              "displayName": "remaining_stock",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "alert_status",
+              "displayName": "alert_status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "minimum_stock",
+              "displayName": "minimum_stock",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "id": "79f5b363-b2a4-4352-bf46-531a29be3480",
+      "name": "Append row in sheet",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        704,
+        0
+      ],
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "X3P7IEoPGgK8zyN4",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "historywasinsane@gmail.com",
+        "subject": "Low Stock Alert — Restocking Required",
+        "emailType": "text",
+        "message": "=Hello,  The following product has reached or fallen below its minimum stock level and needs restocking.  Product ID: {{ $json.product_id }} Product Name: {{ $json.product_name }} Remaining Stock: {{ $json.remaining_stock }} Minimum Stock: {{ $json.minimum_stock }}  Please arrange restocking as soon as possible.  Best regards, Inventory Management System",
+        "options": {}
+      },
+      "id": "492410ed-464c-42a2-9a0a-9f93e1aa8915",
+      "name": "Send a message",
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        864,
+        0
+      ],
+      "webhookId": "0ba4f140-7067-489a-8f84-5caf9d249ba7",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "wsq9fyGGOaXQmNFx",
+          "name": "Gmail account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "Get row(s) in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get row(s) in sheet": {
+      "main": [
+        [
+          {
+            "node": "Get row(s) in sheet1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get row(s) in sheet1": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript": {
+      "main": [
+        [
+          {
+            "node": "Append row in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Append row in sheet": {
+      "main": [
+        [
+          {
+            "node": "Send a message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "7c245c24-e362-4a9b-b3e9-3c6bf214f389",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "2299ad7e2ddc455f35e9de3b09fac7626a218b7f533b673ee370932c94ed7490"
+  },
+  "nodeGroups": [],
+  "id": "HrDvvJ6uHjXr6AdT",
+  "tags": []
+}
