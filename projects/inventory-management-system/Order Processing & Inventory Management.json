@@ -1,0 +1,623 @@
+{
+  "name": "Order Processing & Inventory Management",
+  "nodes": [
+    {
+      "parameters": {
+        "formTitle": "Order Processing & Inventory Management",
+        "formFields": {
+          "values": [
+            {
+              "fieldLabel": "Customer Name",
+              "fieldName": "customer_name"
+            },
+            {
+              "fieldLabel": "Customer Email",
+              "fieldType": "email",
+              "fieldName": "customer_email"
+            },
+            {
+              "fieldLabel": "Product ID",
+              "fieldType": "dropdown",
+              "fieldName": "product_id",
+              "fieldOptions": {
+                "values": [
+                  {
+                    "option": "P001"
+                  },
+                  {
+                    "option": "P002"
+                  },
+                  {
+                    "option": "P003"
+                  }
+                ]
+              }
+            },
+            {
+              "fieldLabel": "Quantity",
+              "fieldType": "number",
+              "fieldName": "quantity"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.formTrigger",
+      "typeVersion": 2.6,
+      "position": [
+        0,
+        0
+      ],
+      "id": "37a92f63-47f5-400c-b683-4fddccbf05d3",
+      "name": "On form submission",
+      "webhookId": "3aac834b-51c3-4afb-8b70-b5ad8f799b13"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "14Y0rg1fcNDqCtqS0LAdBMBjfeKW8aCmyNe4sT0TJ6FI",
+          "mode": "list",
+          "cachedResultName": "Orders processing database",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/14Y0rg1fcNDqCtqS0LAdBMBjfeKW8aCmyNe4sT0TJ6FI/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Inventory",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/14Y0rg1fcNDqCtqS0LAdBMBjfeKW8aCmyNe4sT0TJ6FI/edit#gid=0"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        160,
+        0
+      ],
+      "id": "bd4b31c4-3ff4-44b7-8d54-d8ae00f8ce2d",
+      "name": "Get row(s) in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "X3P7IEoPGgK8zyN4",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "\nconst inventory = $input.all().map(item => item.json);\n\nconst order = $('On form submission').first().json;\n\nconst product = inventory.find(item =>\n  String(item.product_id).trim() ===\n  String(order.product_id).trim()\n);\n\nconst quantity = Number(order.quantity);\n\nconst quantityValid =\n  Number.isInteger(quantity) && quantity > 0;\n\nconst stock = product\n  ? Number(product.stock_quantity)\n  : 0;\n\nconst price = product\n  ? Number(product.price)\n  : 0;\n\nlet reason = '';\n\nif (!product) {\n  reason = 'Product not found';\n} else if (!quantityValid) {\n  reason = 'Invalid quantity';\n} else if (quantity > stock) {\n  reason = 'Insufficient stock';\n}\n\nconst accepted = reason === '';\n\nreturn [\n  {\n    json: {\n      ...order,\n      product_found: !!product,\n      quantity_valid: quantityValid,\n      available_stock: stock,\n      unit_price: price,\n      total_price: accepted ? price * quantity : 0,\n      order_status: accepted ? 'Accepted' : 'Rejected',\n      rejection_reason: reason\n    }\n  }\n];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        320,
+        0
+      ],
+      "id": "8293cd81-587a-4e92-a39a-7f598291b71d",
+      "name": "Code in JavaScript"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 4
+          },
+          "conditions": [
+            {
+              "id": "125dd163-ad6f-42ed-a6f0-a91e128b3dd8",
+              "leftValue": "={{ $json.order_status }}",
+              "rightValue": "Accepted",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "looseTypeValidation": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.4,
+      "position": [
+        480,
+        0
+      ],
+      "id": "bd5a9979-0152-4a0b-895c-a8373eeed87d",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "14Y0rg1fcNDqCtqS0LAdBMBjfeKW8aCmyNe4sT0TJ6FI",
+          "mode": "list",
+          "cachedResultName": "Orders processing database",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/14Y0rg1fcNDqCtqS0LAdBMBjfeKW8aCmyNe4sT0TJ6FI/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 921005369,
+          "mode": "list",
+          "cachedResultName": "Orders",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/14Y0rg1fcNDqCtqS0LAdBMBjfeKW8aCmyNe4sT0TJ6FI/edit#gid=921005369"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "order_id": "={{ 'ORD-' + $now.toFormat('yyyyMMddHHmmss') + '-' + Math.floor(Math.random() * 1000) }}",
+            "customer_name": "={{ $json.customer_name }}",
+            "customer_email": "={{ $json.customer_email }}",
+            "product_id": "={{ $json.product_id }}",
+            "quantity": "={{ $json.quantity }}",
+            "total_price": "={{ $json.total_price }}",
+            "status": "Accepted"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "order_id",
+              "displayName": "order_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "customer_name",
+              "displayName": "customer_name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "customer_email",
+              "displayName": "customer_email",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "product_id",
+              "displayName": "product_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "quantity",
+              "displayName": "quantity",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "total_price",
+              "displayName": "total_price",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "status",
+              "displayName": "status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        640,
+        -112
+      ],
+      "id": "b4ab9c89-3ee8-4cf4-a988-d1cca8a33ba1",
+      "name": "Append row in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "X3P7IEoPGgK8zyN4",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "value": "14Y0rg1fcNDqCtqS0LAdBMBjfeKW8aCmyNe4sT0TJ6FI",
+          "mode": "list",
+          "cachedResultName": "Orders processing database",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/14Y0rg1fcNDqCtqS0LAdBMBjfeKW8aCmyNe4sT0TJ6FI/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Inventory",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/14Y0rg1fcNDqCtqS0LAdBMBjfeKW8aCmyNe4sT0TJ6FI/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "product_id": "={{ $('Code in JavaScript').first().json.product_id }}",
+            "stock_quantity": "={{ $('Code in JavaScript').first().json.available_stock - Number($('Code in JavaScript').first().json.quantity) }}"
+          },
+          "matchingColumns": [
+            "product_id"
+          ],
+          "schema": [
+            {
+              "id": "product_id",
+              "displayName": "product_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "product_name",
+              "displayName": "product_name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "price",
+              "displayName": "price",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "stock_quantity",
+              "displayName": "stock_quantity",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "minimum_stock",
+              "displayName": "minimum_stock",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "row_number",
+              "displayName": "row_number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "readOnly": true,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        816,
+        -112
+      ],
+      "id": "6545d47b-32bf-4d13-ac1c-5e23154f58ed",
+      "name": "Update row in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "X3P7IEoPGgK8zyN4",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "14Y0rg1fcNDqCtqS0LAdBMBjfeKW8aCmyNe4sT0TJ6FI",
+          "mode": "list",
+          "cachedResultName": "Orders processing database",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/14Y0rg1fcNDqCtqS0LAdBMBjfeKW8aCmyNe4sT0TJ6FI/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 921005369,
+          "mode": "list",
+          "cachedResultName": "Orders",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/14Y0rg1fcNDqCtqS0LAdBMBjfeKW8aCmyNe4sT0TJ6FI/edit#gid=921005369"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "order_id": "={{ 'ORD-' + $now.toFormat('yyyyMMddHHmmss') + '-' + Math.floor(Math.random() * 1000) }}",
+            "customer_name": "={{ $json.customer_name }}",
+            "customer_email": "={{ $json.customer_email }}",
+            "product_id": "={{ $json.product_id }}",
+            "quantity": "={{ $json.quantity }}",
+            "status": "={{ $json.rejection_reason }}",
+            "total_price": "0"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "order_id",
+              "displayName": "order_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "customer_name",
+              "displayName": "customer_name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "customer_email",
+              "displayName": "customer_email",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "product_id",
+              "displayName": "product_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "quantity",
+              "displayName": "quantity",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "total_price",
+              "displayName": "total_price",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "status",
+              "displayName": "status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        640,
+        112
+      ],
+      "id": "a00fd017-1c2b-41e4-bad2-cb46032421df",
+      "name": "Append row in sheet1",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "X3P7IEoPGgK8zyN4",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ $('On form submission').first().json.customer_email }}",
+        "subject": "Your Order Has Been Confirmed!",
+        "emailType": "text",
+        "message": "=Hi {{ $('On form submission').first().json.customer_name }},\n\nGood news! Your order has been accepted.\n\nProduct ID: {{ $('On form submission').first().json.product_id }}\nQuantity: {{ $('On form submission').first().json.quantity }}\nTotal Price: PKR {{ $('Code in JavaScript').first().json.total_price }}\n\nYour order is now being processed.\n\nThank you for shopping with us!\n\nBest regards,\nOrder Management Team",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        976,
+        -112
+      ],
+      "id": "bf77f180-e612-41f0-8c14-3f12b6166c20",
+      "name": "Send a message",
+      "webhookId": "a6ab6350-3f99-48d9-b5cf-932b84ab1a53",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "wsq9fyGGOaXQmNFx",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ $('On form submission').first().json.customer_email }}",
+        "subject": "Update on Your Order",
+        "emailType": "text",
+        "message": "=Hi {{ $('On form submission').first().json.customer_name }},\n\nUnfortunately, we couldn't accept your order.\n\nProduct ID: {{ $('On form submission').first().json.product_id }}\nQuantity requested: {{ $('On form submission').first().json.quantity }}\nReason: {{ $('Code in JavaScript').first().json.rejection_reason }}\n\nPlease check product availability or submit a new order with a different quantity.\n\nWe apologize for the inconvenience.\n\nBest regards,\nOrder Management Team",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        976,
+        112
+      ],
+      "id": "b1130758-d26d-4ce3-9ad5-b340d8bdc64f",
+      "name": "Send a message1",
+      "webhookId": "c806a748-ed7d-4c6c-8c6d-65c74c4f47ee",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "wsq9fyGGOaXQmNFx",
+          "name": "Gmail account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "On form submission": {
+      "main": [
+        [
+          {
+            "node": "Get row(s) in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get row(s) in sheet": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Append row in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Append row in sheet1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Append row in sheet": {
+      "main": [
+        [
+          {
+            "node": "Update row in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update row in sheet": {
+      "main": [
+        [
+          {
+            "node": "Send a message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send a message": {
+      "main": [
+        []
+      ]
+    },
+    "Append row in sheet1": {
+      "main": [
+        [
+          {
+            "node": "Send a message1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "0d7920ae-54f8-4ecd-a183-7e897be59bb4",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "2299ad7e2ddc455f35e9de3b09fac7626a218b7f533b673ee370932c94ed7490"
+  },
+  "nodeGroups": [],
+  "id": "UMQj3HMDB64avk3Q",
+  "tags": []
+}
