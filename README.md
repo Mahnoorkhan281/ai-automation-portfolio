@@ -26,7 +26,7 @@ Automatically routes customer inquiries based on inquiry type and prepares diffe
 
 [View Project](./projects/customer-inquiry-router/)
 
-## Inventory Management Automation System
+### 4. Inventory Management Automation System
 
 An inventory automation project built with **n8n, Google Sheets, and JavaScript** to streamline order processing and stock monitoring.
 
