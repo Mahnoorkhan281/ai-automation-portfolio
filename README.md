@@ -59,3 +59,65 @@ An inventory automation project built with **n8n, Google Sheets, and JavaScript*
 This project demonstrates workflow automation, conditional logic, data processing, inventory management, and automated notifications.
 
 More projects coming soon.
+
+# Urban Closet — AI Customer Support Automation
+
+An AI-powered customer support workflow built with n8n, Groq AI, Google Sheets, and Gmail.
+
+## Project Overview
+
+This project automates customer support operations for a fictional online clothing store called Urban Closet.
+
+It receives customer inquiries, retrieves order information, analyzes messages using AI, generates suggested replies, and allows a human to approve or reject responses before creating Gmail drafts.
+
+## Features
+
+- Automatically receives new customer requests from Google Sheets.
+- Retrieves customer order details using Order ID.
+- Uses AI to classify customer inquiries and determine priority.
+- Generates AI-powered customer support recommendations and replies.
+- Records support requests and AI results in Google Sheets.
+- Provides a human approval form.
+- Updates approval status automatically.
+- Creates Gmail drafts for approved responses only.
+- Prevents rejected responses from reaching Gmail drafts.
+
+## Tools & Technologies
+
+- n8n — Workflow automation
+- Groq API — AI processing
+- Google Sheets — Order database and support logs
+- Gmail API — Email draft creation
+- JavaScript — AI response parsing
+- JSON — Data exchange
+
+## Workflow
+
+1. Receive customer inquiry.
+2. Retrieve order information.
+3. Analyze inquiry using AI.
+4. Parse the AI-generated response.
+5. Save results in the support log.
+6. Request human approval.
+7. Update approval status.
+8. Create a Gmail draft if approved.
+
+## Key Skills Demonstrated
+
+- Workflow automation
+- API integration
+- AI integration
+- Data handling
+- Conditional logic
+- JavaScript
+- Human-in-the-loop automation
+
+## Project Status
+
+**First version completed and tested.**
+
+This is a learning and portfolio project. It uses fictional customer data and is not connected to a real clothing business.
+
+## Author
+
+Mahnoor Khan
