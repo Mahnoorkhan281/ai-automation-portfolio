@@ -1,0 +1,655 @@
+{
+  "name": "Urban Closet — AI Operations Assistant.",
+  "nodes": [
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1qVMt6yXtjev5tT3GIHvDMFPoNZEJcdwFX1HMaSERXag",
+          "mode": "list",
+          "cachedResultName": "Urban Closet - Business Database",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1qVMt6yXtjev5tT3GIHvDMFPoNZEJcdwFX1HMaSERXag/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 2108235064,
+          "mode": "list",
+          "cachedResultName": "Support_Log",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1qVMt6yXtjev5tT3GIHvDMFPoNZEJcdwFX1HMaSERXag/edit#gid=2108235064"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Customer_Name": "=\t{{ $('Recieve Customer Request').item.json.Customer_Name }}",
+            "Email": "={{ $('Recieve Customer Request').item.json.Email }}",
+            "Order_ID": "={{ $('Recieve Customer Request').item.json.Order_ID }}",
+            "Category": "={{ $json.category }}",
+            "Priority": "={{ $json.priority }}",
+            "AI_Recommendation": "={{ $json.recommendation }}",
+            "Suggested_Reply": "=\t{{ $json.suggested_reply }}",
+            "Approval_Status": "\tPending",
+            "Timestamp": "={{ $('Recieve Customer Request').item.json.Timestamp }}",
+            "Customer_Message": "={{ $('Recieve Customer Request').item.json.Customer_Message }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Timestamp",
+              "displayName": "Timestamp",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Customer_Name",
+              "displayName": "Customer_Name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Email",
+              "displayName": "Email",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Order_ID",
+              "displayName": "Order_ID",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Customer_Message",
+              "displayName": "Customer_Message",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Category",
+              "displayName": "Category",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Priority",
+              "displayName": "Priority",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "AI_Recommendation",
+              "displayName": "AI_Recommendation",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Suggested_Reply",
+              "displayName": "Suggested_Reply",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Approval_Status",
+              "displayName": "Approval_Status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        144,
+        64
+      ],
+      "id": "483a4d96-ee7b-494e-92bd-c64d2648ea8d",
+      "name": "Append row in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "o2PH2AgYSUowEkyq",
+          "name": "Google Sheets account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "8ee43542-3024-4c09-bfb3-6873818c9586",
+              "leftValue": "={{ $('Update Approval Status').item.json['Approval Decision'] }}",
+              "rightValue": "Approved",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "looseTypeValidation": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        672,
+        64
+      ],
+      "id": "cead0d63-bf5f-4be4-a4e4-80004decbd88",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "value": "1qVMt6yXtjev5tT3GIHvDMFPoNZEJcdwFX1HMaSERXag",
+          "mode": "list",
+          "cachedResultName": "Urban Closet - Business Database",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1qVMt6yXtjev5tT3GIHvDMFPoNZEJcdwFX1HMaSERXag/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 2108235064,
+          "mode": "list",
+          "cachedResultName": "Support_Log",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1qVMt6yXtjev5tT3GIHvDMFPoNZEJcdwFX1HMaSERXag/edit#gid=2108235064"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Timestamp": "={{ $('Recieve Customer Request').item.json.Timestamp }}",
+            "Approval_Status": "={{ $('Update Approval Status').item.json['Approval Decision'] }}"
+          },
+          "matchingColumns": [
+            "Timestamp"
+          ],
+          "schema": [
+            {
+              "id": "Timestamp",
+              "displayName": "Timestamp",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Customer_Name",
+              "displayName": "Customer_Name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Email",
+              "displayName": "Email",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Order_ID",
+              "displayName": "Order_ID",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Customer_Message",
+              "displayName": "Customer_Message",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Category",
+              "displayName": "Category",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Priority",
+              "displayName": "Priority",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "AI_Recommendation",
+              "displayName": "AI_Recommendation",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Suggested_Reply",
+              "displayName": "Suggested_Reply",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Approval_Status",
+              "displayName": "Approval_Status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "row_number",
+              "displayName": "row_number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "readOnly": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        512,
+        64
+      ],
+      "id": "e8d128b8-e293-465c-96e6-b047c056e38f",
+      "name": "Update row in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "xnrWkDecHkV8n91V",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1qVMt6yXtjev5tT3GIHvDMFPoNZEJcdwFX1HMaSERXag",
+          "mode": "list",
+          "cachedResultName": "Urban Closet - Business Database",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1qVMt6yXtjev5tT3GIHvDMFPoNZEJcdwFX1HMaSERXag/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Orders",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1qVMt6yXtjev5tT3GIHvDMFPoNZEJcdwFX1HMaSERXag/edit#gid=0"
+        },
+        "filtersUI": {
+          "values": [
+            {
+              "lookupColumn": "Order_ID",
+              "lookupValue": "={{ $('Recieve Customer Request').item.json.Order_ID }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        -336,
+        -128
+      ],
+      "id": "edda1e7d-e3cf-437d-af77-3194ae878546",
+      "name": "Find Customer Order",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "xnrWkDecHkV8n91V",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "openai/gpt-oss-20b",
+          "mode": "list",
+          "cachedResultName": "OPENAI/GPT-OSS-20B"
+        },
+        "responses": {
+          "values": [
+            {
+              "content": "=\nYou are the customer support assistant for Urban Closet, an online clothing store.\n\nAnalyze the customer message using the actual order information provided below.\n\nCUSTOMER INFORMATION:\nName: {{ $('Recieve Customer Request').item.json.Customer_Name }}\nEmail: {{ $('Recieve Customer Request').item.json.Email }}\nOrder ID: {{ $('Recieve Customer Request').item.json.Order_ID }}\nMessage: {{ $('Recieve Customer Request').item.json.Customer_Message }}\n\nACTUAL ORDER INFORMATION:\nOrder ID: {{ $json.Order_ID }}\nProduct: {{ $json.Product }}\nSize: {{ $json.Size }}\nAmount: {{ $json.Amount }}\nOrder Status: {{ $json.Order_Status }}\nTracking Status: {{ $json.Tracking_Status }}\n\nProvide:\n\n1. Category: Shipping, Damaged Item, Refund, Cancellation, Product Question, or Other.\n2. Priority: Low, Medium, or High.\n3. Main customer problem.\n4. Actual order status.\n5. Recommended next action.\n6. A professional reply to the customer.\n\nRULES:\n- Use only the supplied order information.\n- Never invent tracking numbers or delivery dates.\n- Never promise refunds or replacements.\n- Flag damaged items and refund requests for human review.\n- Be polite, concise, and empathetic.\n\nADDITIONAL ACCURACY RULES:\n- Never estimate or promise a delivery date unless an exact date is provided in the order data.\n- Never say a package will arrive within a specific number of days without evidence.\n- Clearly distinguish between confirmed information and suggestions.\n- If tracking information is unavailable, say so honestly.\n\nOUTPUT FORMAT:\n\nReturn ONLY valid JSON. Do not use Markdown or code fences.\n\nUse exactly these fields:\n\n{\n  \"category\": \"Damaged Item\",\n  \"priority\": \"High\",\n  \"main_problem\": \"Short description\",\n  \"order_status\": \"Actual order status\",\n  \"recommendation\": \"Recommended next action\",\n  \"suggested_reply\": \"Complete customer reply\"\n}\n\nAdditional rules:\n- Never invent store policies, return procedures, phone numbers, email addresses or delivery dates.\n- Never promise refunds, replacements or free shipping.\n- Recommend human approval for refunds, replacements and damaged-item complaints.\n- Keep the customer reply professional and concise.\n- Do not claim that a complaint has been flagged, escalated, or forwarded unless the workflow has actually performed that action.\n- Do not promise that anyone will contact the customer or give instructions about packaging or returns unless those procedures are provided in the order data.\nSTRICT ACCURACY RULES:\n\n- Never claim that a complaint has been logged, forwarded, escalated, or reviewed unless a workflow action confirms it.\n- Never claim that a team will contact the customer.\n- Never invent return instructions, packaging requirements, or store policies.\n- Never recommend a specific waiting period for delivery.\n- For delayed or in-transit orders, report only the actual tracking status and explain when no delivery date is available.\n- When a next action requires a human, recommend human review internally. Do not tell the customer that this review has already happened.\n- Never mention tracking links, tracking emails, or notifications unless their existence is confirmed by the supplied data.\n- Do not promise future actions such as forwarding, investigating, contacting, or reviewing unless the workflow is configured to perform them.\n- For damaged items, politely ask the customer to provide photos. Do not promise a resolution.\n\n"
+            }
+          ]
+        },
+        "builtInTools": {},
+        "options": {
+          "store": false
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 2.3,
+      "position": [
+        -160,
+        -128
+      ],
+      "id": "2b14c74f-78ca-431d-a506-a51d4274ac85",
+      "name": "AI Customer Support",
+      "credentials": {
+        "openAiApi": {
+          "id": "Dt6BitmxvORcYfxy",
+          "name": "OpenAI account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "\nreturn $input.all().map(item => {\n  const raw = item.json.output[0].content[0].text;\n\n  const parsed = JSON.parse(raw);\n\n  return {\n    json: parsed\n  };\n});\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        128,
+        -128
+      ],
+      "id": "c7c211c6-b759-4cc7-95a3-df4e446fac55",
+      "name": "Parse AI Response"
+    },
+    {
+      "parameters": {
+        "resume": "form",
+        "formTitle": "Urban Closet — Customer Reply Approval",
+        "formDescription": "Review the AI-generated customer reply and decide whether it should be approved.",
+        "formFields": {
+          "values": [
+            {
+              "fieldLabel": "Approval Decision",
+              "fieldType": "dropdown",
+              "fieldOptions": {
+                "values": [
+                  {
+                    "option": "Approved"
+                  },
+                  {
+                    "option": "Rejected"
+                  }
+                ]
+              },
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Suggested Reply",
+              "fieldType": "textarea",
+              "defaultValue": "={{ $('Parse AI Response').item.json.suggested_reply }}",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "=Customer Email",
+              "defaultValue": "={{ $('Recieve Customer Request').item.json.Email }}",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Original Customer Message",
+              "fieldType": "textarea",
+              "placeholder": "=",
+              "defaultValue": "={{ $('Recieve Customer Request').item.json.Customer_Message }}",
+              "requiredField": true
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        336,
+        64
+      ],
+      "id": "46eed4dd-12a6-4689-aac1-ba70c455b8ab",
+      "name": "Update Approval Status",
+      "webhookId": "800429e5-f0c3-4ce1-a571-55175151f5a8"
+    },
+    {
+      "parameters": {
+        "resource": "draft",
+        "subject": "={{ 'Urban Closet — Support Response' }}",
+        "message": "={{ $('Update Approval Status').item.json['Suggested Reply'] }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        576,
+        -112
+      ],
+      "id": "3d695ea3-c6db-4aed-adf5-e42d840ebb07",
+      "name": "Create Approved Email Draft",
+      "webhookId": "ed2e1578-bb59-4574-a3fd-94affbb65a98",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "LWy6z4asyUY1Q079",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "pollTimes": {
+          "item": [
+            {
+              "mode": "everyMinute"
+            }
+          ]
+        },
+        "documentId": {
+          "__rl": true,
+          "value": "1qVMt6yXtjev5tT3GIHvDMFPoNZEJcdwFX1HMaSERXag",
+          "mode": "list",
+          "cachedResultName": "Urban Closet - Business Database",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1qVMt6yXtjev5tT3GIHvDMFPoNZEJcdwFX1HMaSERXag/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 1593607144,
+          "mode": "list",
+          "cachedResultName": "Incoming_Requests",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1qVMt6yXtjev5tT3GIHvDMFPoNZEJcdwFX1HMaSERXag/edit#gid=1593607144"
+        },
+        "event": "rowAdded",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheetsTrigger",
+      "typeVersion": 1,
+      "position": [
+        -240,
+        16
+      ],
+      "id": "da8c432c-63b7-48e2-bc07-3f3bcd34ce5b",
+      "name": "Recieve Customer Request",
+      "credentials": {
+        "googleSheetsTriggerOAuth2Api": {
+          "id": "UfjR7AhvZfTPWEMD",
+          "name": "Google Sheets Trigger account 2"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Append row in sheet": {
+      "main": [
+        [
+          {
+            "node": "Update Approval Status",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Create Approved Email Draft",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update row in sheet": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Find Customer Order": {
+      "main": [
+        [
+          {
+            "node": "AI Customer Support",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Customer Support": {
+      "main": [
+        [
+          {
+            "node": "Parse AI Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Parse AI Response": {
+      "main": [
+        [
+          {
+            "node": "Append row in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update Approval Status": {
+      "main": [
+        [
+          {
+            "node": "Update row in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Recieve Customer Request": {
+      "main": [
+        [
+          {
+            "node": "Find Customer Order",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "352e3404-42e3-4ab1-b6ee-d332ef2b1540",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "da52e66aa8bbea00d497c8a0e20a99761abc9c091bd1c96fc1d8791bd12d2086"
+  },
+  "nodeGroups": [],
+  "id": "I5gfbUdUuD4qaKzf",
+  "tags": []
+}
