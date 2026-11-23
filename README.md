@@ -58,6 +58,21 @@ An inventory automation project built with **n8n, Google Sheets, and JavaScript*
 
 This project demonstrates workflow automation, conditional logic, data processing, inventory management, and automated notifications.
 
+### 5. Urban Closet — AI Customer Support Automation
+
+An AI-powered customer support workflow built using **n8n, Groq AI, Google Sheets, and Gmail**.
+
+- Automatically receives customer inquiries.
+- Retrieves order details from Google Sheets.
+- Uses AI to classify complaints and assign priority.
+- Generates suggested customer replies.
+- Includes human approval before creating email drafts.
+- Updates approval status and creates Gmail drafts only for approved responses.
+
+**Tools:** n8n, Groq AI, Google Sheets, Gmail API, JavaScript
+
+[**View Project →**](https://github.com/Mahnoorkhan281/ai-automation-portfolio/tree/main/projects/urban-closet-ai-customer-support)
+
 More projects coming soon.
 
 # Urban Closet — AI Customer Support Automation
